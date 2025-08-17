@@ -1,37 +1,43 @@
+#!/bin/bash
+
 echo "Starting process..."
 
-# Exit if no port number is provided
-if [ "$#" -ne 1 ]; then
-  echo "Parameter required PORT"
-  exit 1
+export PATH=/usr/bin:$PATH
+
+if [ "$#" -eq 1 ]; then
+  PORT="$1"
+else
+  echo "No port provided. Searching for a free one..."
+  PORT=$(comm -23 <(seq 3000 65000 | sort) <(ss -Htan | awk '{print $4}' | sed 's/.*://'))
+  PORT=$(echo "$PORT" | shuf -n 1) 
+  echo "Using free port: $PORT"
 fi
 
-PORT="$1"
 
-# Exit if the port is not a non-negative integer
 if ! [[ "$PORT" =~ ^[0-9]+$ ]]; then
   echo "PORT must be a non-negative integer."
   exit 1
 fi
 
-# Kill any process currently using the specified port
+
 PIDS=$(timeout 2s lsof -ti ":$PORT")
 if [ -n "$PIDS" ]; then
+  echo "Killing process on port $PORT..."
   kill -9 $PIDS
 fi
 
-# Update code from GitHub repo
-if ! git pull; then
+
+if ! /usr/bin/git pull; then
   echo "git pull failed"
   exit 1
 fi
 
-# Create virtual environment and install dependencies
+# 32953 
 python3 -m venv .venv
 source .venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 
-# Start the Flask app using Gunicorn on the specified port
-gunicorn -b ":$PORT" app:app
 
-#nest get_port gives: Port 43847 is free to use!
+echo "Starting Flask app on port $PORT..."
+exec gunicorn -b ":$PORT" app:app

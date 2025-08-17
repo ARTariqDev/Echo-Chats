@@ -17,6 +17,7 @@ db = client["EchoChats"]
 users = db["users"]
 dbComments = db["dbComments"]
 header_text = "Nexus Learn" # change text here to change h1 in Comments section for your app/embed
+#nest get_port: 34941
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
@@ -216,4 +217,4 @@ def reply_comment():
     return jsonify({"message": "Reply added", "reply": reply})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=3000, debug=True)
+    app.run(host="0.0.0.0", port=32953, debug=True)
