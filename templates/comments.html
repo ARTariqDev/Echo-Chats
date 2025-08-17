@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ header_text }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>{{ header_text }}</h1>
+
+     <div class="button-group">
+        <button class="btn" onclick="addComment()">Add Comment</button>
+        <button class="btn"><a href="/home" id="link">Back to Home</a></button>
+      </div>
+
+    <div class="comment-form">
+      <textarea id="newComment" placeholder="Write a comment..."></textarea>
+    </div>
+
+    <div id="commentsContainer"></div>
+    <button class="btn load-more-btn" onclick="loadComments()">Load More</button>
+  </div>
+
+  <script>
+    const loggedInUser = "{{ session['username']|default('') }}";
+    let page = 1;
+
+    async function loadComments() {
+      const res = await fetch(`/api/comments?page=${page}`);
+      const comments = await res.json();
+
+      if (comments.length === 0) {
+        document.querySelector('.load-more-btn').style.display = 'none';
+        return;
+      }
+
+      comments.forEach(comment => {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'comment-card';
+
+        let deleteBtn = '';
+        if(comment.username === loggedInUser){
+          deleteBtn = `<button class="btn" onclick="deleteComment('${comment._id}')">Delete</button>`;
+        }
+
+        commentDiv.innerHTML = `
+          <img src="${comment.profile_pic}" alt="Profile Pic">
+          <div class="comment-content">
+            <strong>${comment.username}</strong>: ${comment.content}
+            <div class="comment-actions">
+              <span>${comment.likes} likes</span>
+              <button class="btn" onclick="likeComment('${comment._id}', this)">Like</button>
+              <button class="btn" onclick="toggleReplyForm('${comment._id}')">Reply</button>
+              ${deleteBtn}
+            </div>
+            <div class="reply-form" id="replyForm-${comment._id}" style="display:none;">
+              <input type="text" id="replyInput-${comment._id}" placeholder="Write a reply...">
+              <button class="btn" onclick="addReply('${comment._id}')">Reply</button>
+            </div>
+            <div class="replies" id="replies-${comment._id}"></div>
+          </div>
+        `;
+        document.getElementById('commentsContainer').appendChild(commentDiv);
+
+        if(comment.replies && comment.replies.length){
+          renderReplies(comment._id, comment.replies);
+        }
+      });
+
+      page++;
+    }
+
+    function renderReplies(commentId, replies){
+      const container = document.getElementById(`replies-${commentId}`);
+      container.innerHTML = '';
+      replies.forEach(reply => {
+        const replyDiv = document.createElement('div');
+        replyDiv.className = 'reply-card';
+        replyDiv.innerHTML = `
+          <img src="${reply.profile_pic}" alt="Profile Pic">
+          <div>
+            <strong>${reply.username}</strong>: ${reply.content}
+            <button class="minimize-btn" onclick="toggleReplies('${commentId}')">-</button>
+          </div>
+        `;
+        container.appendChild(replyDiv);
+      });
+    }
+
+    function toggleReplyForm(commentId){
+      const form = document.getElementById(`replyForm-${commentId}`);
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function toggleReplies(commentId){
+      const container = document.getElementById(`replies-${commentId}`);
+      container.style.display = container.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function addComment(){
+      const content = document.getElementById('newComment').value;
+      if(!content) return;
+
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({content})
+      });
+      if(res.ok){
+        document.getElementById('commentsContainer').innerHTML = '';
+        page = 1;
+        loadComments();
+        document.getElementById('newComment').value = '';
+      }
+    }
+
+    async function addReply(commentId){
+      const input = document.getElementById(`replyInput-${commentId}`);
+      const reply = input.value;
+      if(!reply) return;
+
+      const res = await fetch('/api/reply', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({comment_id: commentId, reply})
+      });
+
+      if(res.ok){
+        input.value = '';
+        const commentRes = await fetch(`/api/comments?page=1`);
+        const comments = await commentRes.json();
+        const updatedComment = comments.find(c => c._id === commentId);
+        renderReplies(commentId, updatedComment.replies);
+      }
+    }
+
+    async function likeComment(commentId, btn){
+      const res = await fetch('/api/like_comment', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({comment_id: commentId})
+      });
+      if(res.ok){
+        const likesSpan = btn.previousElementSibling;
+        likesSpan.textContent = parseInt(likesSpan.textContent) + 1 + " likes";
+      }
+    }
+
+    async function deleteComment(commentId){
+      if(!confirm("Are you sure you want to delete this comment?")) return;
+
+      const res = await fetch('/api/delete_comment', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({comment_id: commentId})
+      });
+
+      if(res.ok){
+        document.getElementById('commentsContainer').innerHTML = '';
+        page = 1;
+        loadComments();
+      }
+    }
+
+    loadComments();
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <script>
+        // Automatically redirect to /login after 3 seconds if success message is shown
+        document.addEventListener("DOMContentLoaded", function () {
+            const successBox = document.getElementById("flash-success");
+            if (successBox) {
+                setTimeout(function () {
+                    window.location.href = "/login";
+                }, 3000);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="title">Sign Up</h1>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div id="flash-success" class="flash-message">
+                {{ messages[0] }}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="profile_pic">Profile Picture:</label>
+            <input type="file" id="profile_pic" name="profile_pic" accept="image/*" required>
+
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
+        <p class="alt-text">Already a user?</p>
+        <a href="/login" class="btn alt-btn">Login Instead</a>
+    </div>
+</body>
+</html>

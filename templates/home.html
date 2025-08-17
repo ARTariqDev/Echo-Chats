@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo Chats</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <!--Pretty much a copy of index.html but for logged in users-->
+    <div class="container">
+        <h1 class="title">Echo Chats</h1>
+        <p id="subtext">Light-Weight Disqus like utility for Forums and Comments By <a href="https://github.com/ARTariqDev" id="link">ARTariqDev</a></p>
+        <div class="button-group">
+            <a href="/user" class="btn">User Profile</a>
+            <a href="/comments" class="btn">View Forum</a>
+            <a href="/logout" class="btn">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

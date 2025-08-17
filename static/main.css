@@ -1,0 +1,266 @@
+:root {
+    --color-primary: #111111;   /* for the background */
+    --color-secondary: #ffaa00; /* for accents,fonts etc */
+    --color-light: #ffffff;
+    --color-danger: #e74c3c;
+    --color-danger-hover: #c0392b;
+    --color-dark-bg: #1a1a1a;
+    --color-dark-card: #222;
+    --color-dark-reply: #333;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+}
+
+body {
+  display: flex;
+  justify-content: center;   
+  align-items: center;   
+  min-height: 100vh;        
+  margin: 0;
+}
+
+
+.container {
+  width: 100%;
+  max-width: 800px; 
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: var(--color-secondary);
+    font-weight: 700;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#subtext {
+    text-align: center;
+    color: var(--color-light);
+}
+
+#link {
+    text-decoration: none;
+    color: var(--color-secondary);
+}
+
+
+.btn {
+    background-color: transparent;
+    color: var(--color-secondary);
+    border: 2px solid var(--color-secondary);
+    padding: 0.8rem 2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.btn:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(255, 170, 0, 0.3);
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+
+.form-container {
+    background-color: var(--color-dark-bg);
+    padding: 2rem 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+form label {
+    display: block;
+    margin: 1rem 0 0.4rem;
+    font-weight: 500;
+    color: var(--color-secondary);
+}
+
+form input, .comment-form textarea, .reply-form input {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: 10px;
+    border: 2px solid var(--color-secondary);
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    font-size: 1rem;
+}
+
+form input:focus, .comment-form textarea:focus, .reply-form input:focus {
+    outline: none;
+    border-color: #e69900;
+    box-shadow: 0 0 8px rgba(255, 170, 0, 0.6);
+}
+
+.submit-btn {
+    display: block;
+    margin-top: 1.5rem;
+    width: 100%;
+    text-align: center;
+}
+
+.alt-text {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: #aaa;
+    text-align: center;
+}
+
+.alt-btn {
+    display: block;
+    margin: 0.8rem auto 0;
+    text-align: center;
+    width: fit-content;
+    padding: 0.6rem 1.8rem;
+}
+
+
+.profile-card {
+    background: var(--color-dark-bg);
+    padding: 30px 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px auto;
+    border: 3px solid var(--color-secondary);
+    box-shadow: 0 2px 6px rgba(255,170,0,0.3);
+    display: block;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--color-secondary);
+}
+
+.profile-email {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: var(--color-secondary);
+}
+
+.delete-btn {
+    background: var(--color-danger);
+    border: none;
+    padding: 12px 24px;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: var(--color-danger-hover);
+}
+
+
+.comment-form {
+    margin-bottom: 20px;
+}
+
+.comment-form textarea {
+    resize: vertical;
+}
+
+#commentsContainer {
+    width: 100%;
+}
+
+.comment-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--color-dark-card);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.comment-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-actions {
+    margin-top: 5px;
+}
+
+.replies {
+    margin-left: 60px;
+    margin-top: 5px;
+}
+
+.reply-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--color-dark-reply);
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.minimize-btn {
+    font-size: 0.8rem;
+    background: transparent;
+    border: none;
+    color: var(--color-secondary);
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.load-more-btn {
+    display: block;
+    margin: 20px auto;
+}
